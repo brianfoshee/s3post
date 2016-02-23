@@ -17,10 +17,13 @@ import (
 func main() {
 	// Payload is used to fill out the policy template
 	type Payload struct {
-		Expiration        string
-		Bucket            string
-		Key               string
-		SuccessRedirect   string
+		Expiration string
+		Bucket     string
+		Key        string
+
+		// Redirect looks like: https://www.brianfoshee.com/?bucket=brianfoshee&key=muploads%2Fcubeprint.mp4&etag=%22aca3de6c6cf590a1f75ef08d939b9eff%22
+		SuccessRedirect string
+
 		ContentTypeStarts string
 		Credential        string
 		Date              string
