@@ -1,0 +1,5 @@
+This is a work in progress. There isn't a public API yet, only a demo of the
+policy generation and signing.
+
+The tests get their info from this AWS example, those aren't my S3 credentials:
+http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-post-example.html
