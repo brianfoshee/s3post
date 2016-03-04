@@ -43,6 +43,7 @@ type Signed struct {
 // reimplement now with a function that returns the exact date we want.
 var now = time.Now
 
+// TODO: should this simply return (policy, signature string)?
 // Sign takes a POST policy and outputs the signed version of the policy as
 // well as a signature to include in the POST form.
 //
