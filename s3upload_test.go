@@ -1,57 +1,36 @@
-package main
+package s3upload
 
 import (
-	"crypto/hmac"
-	"crypto/sha256"
-	"encoding/base64"
-	"encoding/hex"
 	"strings"
 	"testing"
+	"time"
 )
 
-func TestEncodingPolicy(t *testing.T) {
-	b64 := base64.StdEncoding
+func TestSign(t *testing.T) {
+	// clean up the policy whitespace first to match the AWS docs example
 	policy := strings.Replace(policy, "\n", "\r\n", -1)
 
-	p := b64.EncodeToString([]byte(policy))
+	s := New("us-east-1", awsSecret)
 
-	decPolicy, _ := b64.DecodeString(encPolicy)
-	if string(decPolicy) != policy {
-		t.Errorf("decoded policy is not equal to expected policy\n%s\n\n%s\n", decPolicy, policy)
+	// fake the current time to what the test data expects
+	now = func() time.Time {
+		return time.Date(2015, 12, 29, 0, 0, 0, 0, time.UTC)
 	}
 
-	if p != encPolicy {
-		t.Errorf("policy is not equal to expected encoded policy\n%q\n\n%q\n", p, encPolicy)
+	signed := s.Sign([]byte(policy))
+
+	now = time.Now
+
+	if signed.Policy != encPolicy {
+		t.Errorf("Incorrect signed policy. Expected: %s\nActual: %s\n", signed.Policy, encPolicy)
 	}
-}
-
-func TestEncodedSignature(t *testing.T) {
-	s256 := sha256.New
-
-	dk := hmac.New(s256, []byte("AWS4"+awsSecret))
-	dk.Write([]byte("20151229"))
-
-	drk := hmac.New(s256, dk.Sum(nil))
-	drk.Write([]byte("us-east-1"))
-
-	drsk := hmac.New(s256, drk.Sum(nil))
-	drsk.Write([]byte("s3"))
-
-	signingKey := hmac.New(s256, drsk.Sum(nil))
-	signingKey.Write([]byte("aws4_request"))
-
-	signature := hmac.New(s256, signingKey.Sum(nil))
-	signature.Write([]byte(encPolicy))
-
-	// encode signature using hex encoding
-	encsig := make([]byte, hex.EncodedLen(signature.Size()))
-	hex.Encode(encsig, signature.Sum(nil))
-
-	if string(encsig) != encSignature {
-		t.Errorf("signed signature is not equal to expected\n%q\n%q\n", encsig, encSignature)
+	if signed.Signature != encSignature {
+		t.Errorf("Incorrect encoded signature. Expected: %s\nActual: %s\n", signed.Signature, encSignature)
 	}
 }
 
+// Test data based off example in:
+// http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-post-example.html
 const (
 	encSignature = "8afdbf4008c03f22c2cd3cdb72e4afbb1f6a588f3255ac628749a66d7f09699e"
 	awsKey       = "AKIAIOSFODNN7EXAMPLE"
