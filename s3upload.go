@@ -32,24 +32,18 @@ func New(region, secret string) *S3Upload {
 	return s
 }
 
-// Signed holds both the base64 encoded policy document and the hex encoded
-// signature to be sent off with a POST form.
-type Signed struct {
-	Policy    string
-	Signature string
-}
-
 // We need to be able to fake the current time in tests. This allows us to
 // reimplement now with a function that returns the exact date we want.
 var now = time.Now
 
-// TODO: should this simply return (policy, signature string)?
 // Sign takes a POST policy and outputs the signed version of the policy as
 // well as a signature to include in the POST form.
 //
 // Signature is created by the calculation process here:
 // http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-authentication-HTTPPOST.html
-func (s *S3Upload) Sign(policy []byte) Signed {
+//
+// Returns the base64-encoded policy and the hex-encoded, and signed, policy.
+func (s *S3Upload) Sign(policy []byte) (string, string) {
 	b64 := base64.StdEncoding
 	s256 := sha256.New
 
@@ -81,10 +75,5 @@ func (s *S3Upload) Sign(policy []byte) Signed {
 	encsig := make([]byte, hex.EncodedLen(signature.Size()))
 	hex.Encode(encsig, signature.Sum(nil))
 
-	d := Signed{
-		Policy:    string(stringToSign),
-		Signature: string(encsig),
-	}
-
-	return d
+	return string(stringToSign), string(encsig)
 }
