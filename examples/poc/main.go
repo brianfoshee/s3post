@@ -75,11 +75,11 @@ func main() {
 		}
 
 		// generate signature and policy
-		signed := su.Sign(buf.Bytes())
+		policy, signed := su.Sign(buf.Bytes())
 
 		f := Form{
-			Policy:    string(signed.Policy),
-			Signature: string(signed.Signature),
+			Policy:    policy,
+			Signature: signed,
 			URL:       "https://" + bucket + ".s3.amazonaws.com/",
 			Payload:   p,
 		}
