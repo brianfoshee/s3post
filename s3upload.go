@@ -43,6 +43,7 @@ var now = time.Now
 // http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-authentication-HTTPPOST.html
 //
 // Returns the base64-encoded policy and the hex-encoded and signed policy.
+// If an error occurs two empty strings will be returned.
 func (s *S3Upload) Sign(policy []byte) (string, string) {
 	// policy encoded in base64 (String to Sign)
 	stringToSign := make([]byte, base64.StdEncoding.EncodedLen(len(policy)))
