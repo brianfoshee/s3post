@@ -36,15 +36,17 @@ func New(region, secret string) *S3Upload {
 // reimplement now with a function that returns the exact date we want.
 var now = time.Now
 
+// store this for less typing in Sign
+var b64 = base64.StdEncoding
+
 // Sign takes a POST policy and outputs the signed version of the policy as
 // well as a signature to include in the POST form.
 //
 // Signature is created by the calculation process here:
 // http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-authentication-HTTPPOST.html
 //
-// Returns the base64-encoded policy and the hex-encoded, and signed, policy.
+// Returns the base64-encoded policy and the hex-encoded and signed policy.
 func (s *S3Upload) Sign(policy []byte) (string, string) {
-	b64 := base64.StdEncoding
 	s256 := sha256.New
 
 	// policy encoded in base64 (String to Sign)
