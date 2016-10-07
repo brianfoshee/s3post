@@ -17,15 +17,15 @@ func TestSign(t *testing.T) {
 		return time.Date(2015, 12, 29, 0, 0, 0, 0, time.UTC)
 	}
 
-	signed := s.Sign([]byte(policy))
+	policy, signature := s.Sign([]byte(policy))
 
 	now = time.Now
 
-	if signed.Policy != encPolicy {
-		t.Errorf("Incorrect signed policy. Expected: %s\nActual: %s\n", signed.Policy, encPolicy)
+	if policy != encPolicy {
+		t.Errorf("Incorrect signed policy. Expected: %s\nActual: %s\n", policy, encPolicy)
 	}
-	if signed.Signature != encSignature {
-		t.Errorf("Incorrect encoded signature. Expected: %s\nActual: %s\n", signed.Signature, encSignature)
+	if signature != encSignature {
+		t.Errorf("Incorrect encoded signature. Expected: %s\nActual: %s\n", signature, encSignature)
 	}
 }
 

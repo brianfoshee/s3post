@@ -32,13 +32,6 @@ func New(region, secret string) *S3Upload {
 	return s
 }
 
-// Signed holds both the base64 encoded policy document and the hex encoded
-// signature to be sent off with a POST form.
-type Signed struct {
-	Policy    string
-	Signature string
-}
-
 // We need to be able to fake the current time in tests. This allows us to
 // reimplement now with a function that returns the exact date we want.
 var now = time.Now
@@ -48,42 +41,52 @@ var now = time.Now
 //
 // Signature is created by the calculation process here:
 // http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-authentication-HTTPPOST.html
-func (s *S3Upload) Sign(policy []byte) Signed {
-	b64 := base64.StdEncoding
-	s256 := sha256.New
-
+//
+// Returns the base64-encoded policy and the hex-encoded and signed policy.
+// If an error occurs two empty strings will be returned.
+func (s *S3Upload) Sign(policy []byte) (string, string) {
 	// policy encoded in base64 (String to Sign)
-	stringToSign := make([]byte, b64.EncodedLen(len(policy)))
-	b64.Encode(stringToSign, policy)
+	stringToSign := make([]byte, base64.StdEncoding.EncodedLen(len(policy)))
+	base64.StdEncoding.Encode(stringToSign, policy)
 
 	// DateKey = HMACSHA256("AWS4"+awsSecret, "yyyymmdd")
-	dk := hmac.New(s256, []byte("AWS4"+s.awsSecret))
-	dk.Write([]byte(now().UTC().Format("20060102")))
+	dk := hmac.New(sha256.New, []byte("AWS4"+s.awsSecret))
+	_, err := dk.Write([]byte(now().UTC().Format("20060102")))
+	if err != nil {
+		return "", ""
+	}
 
 	// DateRegionKey = HMACSHA256(DateKey, awsRegion)
-	drk := hmac.New(s256, dk.Sum(nil))
-	drk.Write([]byte(s.awsRegion))
+	drk := hmac.New(sha256.New, dk.Sum(nil))
+	_, err = drk.Write([]byte(s.awsRegion))
+	if err != nil {
+		return "", ""
+	}
 
 	// DateRegionServiceKey = HMACSHA256(DateRegionKey, "s3")
-	drsk := hmac.New(s256, drk.Sum(nil))
-	drsk.Write([]byte("s3"))
+	drsk := hmac.New(sha256.New, drk.Sum(nil))
+	_, err = drsk.Write([]byte("s3"))
+	if err != nil {
+		return "", ""
+	}
 
 	// SigningKey = HMACSHA256(DateRegionServiceKey, "aws4_request")
-	signingKey := hmac.New(s256, drsk.Sum(nil))
-	signingKey.Write([]byte("aws4_request"))
+	signingKey := hmac.New(sha256.New, drsk.Sum(nil))
+	_, err = signingKey.Write([]byte("aws4_request"))
+	if err != nil {
+		return "", ""
+	}
 
 	// Signature = HMACSHA256(SigningKey, StringToSign)
-	signature := hmac.New(s256, signingKey.Sum(nil))
-	signature.Write([]byte(stringToSign))
+	signature := hmac.New(sha256.New, signingKey.Sum(nil))
+	_, err = signature.Write([]byte(stringToSign))
+	if err != nil {
+		return "", ""
+	}
 
 	// encode signature using hex encoding
 	encsig := make([]byte, hex.EncodedLen(signature.Size()))
 	hex.Encode(encsig, signature.Sum(nil))
 
-	d := Signed{
-		Policy:    string(stringToSign),
-		Signature: string(encsig),
-	}
-
-	return d
+	return string(stringToSign), string(encsig)
 }
