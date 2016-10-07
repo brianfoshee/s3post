@@ -24,4 +24,4 @@ The policy document is signed using this calculation:
 
 [docs]: http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-UsingHTTPPOST.html
 [pdocs]: http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html
-[policy]: https://github.com/brianfoshee/tree/master/policy
+[policy]: https://github.com/brianfoshee/s3upload/tree/master/policy
