@@ -42,22 +42,22 @@ const (
 // AWS Docs have more information when using each:
 // http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html#sigv4-PolicyConditions
 const (
-	ConditionACL                   string = "acl"
-	ConditionBucket                       = "bucket"
-	ConditionContentLengthRange           = "content-length-range"
-	ConditionCacheControl                 = "Cache-Control"
-	ConditionContentType                  = "Content-Type"
-	ConditionContentDisposition           = "Content-Disposition"
-	ConditionContentEncoding              = "Content-Encoding"
-	ConditionExpires                      = "Expires"
-	ConditionKey                          = "key"
-	ConditionSuccessActionRedirect        = "success_action_redirect"
-	ConditionRedirect                     = "redirect"
-	ConditionSuccessActionStatus          = "success_action_status"
-	ConditionAMZAlgorithm                 = "x-amz-algorithm"
-	ConditionAMZCredential                = "x-amz-credential"
-	ConditionAMZDate                      = "x-amz-date"
-	ConditionAMZSecurityToken             = "x-amz-security-token"
+	ConditionACL                   = "acl"
+	ConditionBucket                = "bucket"
+	ConditionContentLengthRange    = "content-length-range"
+	ConditionCacheControl          = "Cache-Control"
+	ConditionContentType           = "Content-Type"
+	ConditionContentDisposition    = "Content-Disposition"
+	ConditionContentEncoding       = "Content-Encoding"
+	ConditionExpires               = "Expires"
+	ConditionKey                   = "key"
+	ConditionSuccessActionRedirect = "success_action_redirect"
+	ConditionRedirect              = "redirect"
+	ConditionSuccessActionStatus   = "success_action_status"
+	ConditionAMZAlgorithm          = "x-amz-algorithm"
+	ConditionAMZCredential         = "x-amz-credential"
+	ConditionAMZDate               = "x-amz-date"
+	ConditionAMZSecurityToken      = "x-amz-security-token"
 )
 
 // Policy represents an AWS S3 POST policy.
