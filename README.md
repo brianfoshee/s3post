@@ -1,18 +1,23 @@
 [![Build Status](https://travis-ci.org/brianfoshee/s3upload.png)](https://travis-ci.org/brianfoshee/s3upload)
 
-Package s3upload signs S3 POST policy documents for browser-based file uploads
-to AWS S3.
-More details on that can be found in the [AWS docs][docs].
+Package s3upload signs POST policy documents for browser-based file uploads
+to AWS S3. More details on browser-based file uploads can be found in the
+[AWS docs][docs].
 
 ### Usage
 
-To use this package, generate a POST policy document, then pass that policy into
+To use this package, generate a POST policy document then pass that policy into
 the Sign method to receive a signature to be used in a POST form.
 
 Details on Policy documents can be found in the [AWS docs][pdocs].
 
 The [policy][policy] package can be used to generate these documents if
 necessary.
+
+```go
+su := s3upload.New("us-east-1", secret)
+encoded, signed := su.Sign(policyBytes)
+```
 
 See the examples folder for complete usage.
 
