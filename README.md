@@ -2,7 +2,7 @@
 
 Package s3post signs POST policy documents for browser-based file uploads
 to AWS S3. More details on browser-based file uploads can be found in the
-[AWS docs][docs].
+[AWS docs][docs]. Both s3post and policy packages use only stdlib deps.
 
 ### Usage
 
