@@ -34,10 +34,13 @@ const (
 	ConditionMatchRange
 )
 
-// Condition elements supported by default. See AWS docs for rules when using
-// each.
+// Condition elements supported by default.
+//
 // If you need to use x-amz-meta-* or x-amz-* condition elements you can pass
 // those as strings to SetCondition.
+//
+// AWS Docs have more information when using each:
+// http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html#sigv4-PolicyConditions
 const (
 	ConditionACL                   string = "acl"
 	ConditionBucket                       = "bucket"
@@ -57,7 +60,7 @@ const (
 	ConditionAMZSecurityToken             = "x-amz-security-token"
 )
 
-// Policy represents an AWS POST policy.
+// Policy represents an AWS S3 POST policy.
 // More specifics on what a policy should include can be found here:
 // http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html
 type Policy struct {

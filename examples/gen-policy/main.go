@@ -19,7 +19,7 @@ func main() {
 	p.SetCondition(policy.ConditionBucket, "johnsmith", policy.ConditionMatchExact)
 	p.SetCondition(policy.ConditionKey, "user/eric/", policy.ConditionMatchStartsWith)
 
-	// Serialize the policy as a JSON document (as expetect by AWS S3).
+	// Serialize the policy as a JSON document (as expected by AWS S3).
 	b, err := json.Marshal(p)
 	if err != nil {
 		fmt.Println("Issue marshaling policy")
