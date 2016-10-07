@@ -1,6 +1,7 @@
 package policy
 
 import (
+	"encoding/json"
 	"testing"
 	"time"
 )
@@ -53,8 +54,13 @@ func TestPolicy(t *testing.T) {
 		ConditionMatchExact,
 	)
 
-	if p.String() != policyDocWants {
-		t.Errorf("wanted: \n %s \n got: \n %s \n", policyDocWants, p)
+	b, err := json.Marshal(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if string(b) != policyDocWants {
+		t.Errorf("wanted: \n %s \n got: \n %s \n", policyDocWants, string(b))
 	}
 }
 

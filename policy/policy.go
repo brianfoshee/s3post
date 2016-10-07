@@ -1,4 +1,5 @@
-// http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html
+// Package policy provides functionlity to create a POST policy for uploading a
+// file directly from a browser to S3.
 package policy
 
 import (
@@ -7,9 +8,11 @@ import (
 	"time"
 )
 
-// Although you must specify one condition for each form field that you specify
-// in the form, you can create more complex matching criteria by specifying
-// multiple conditions for a form field.
+// AWSV4SignatureALgorithm is the value typically used for the x-amz-algorithm
+// condition key.
+const AWSV4SignatureAlgorithm = "AWS4-HMAC-SHA256"
+
+//
 type ConditionMatch int
 
 const (
@@ -18,8 +21,6 @@ const (
 	ConditionMatchAny
 	ConditionMatchRange
 )
-
-const AWSV4SignatureAlgorithm = "AWS4-HMAC-SHA256"
 
 type ConditionKey string
 
@@ -45,17 +46,32 @@ const (
 	ConditionKeyAMZSecurityToken                   = "x-amz-security-token"
 )
 
+// Policy represents an AWS POST policy.
+// More specifics on what a policy should include can be found here:
+// http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html
 type Policy struct {
+	// The expiration field specifies the expiration date and time of the
+	// POST policy in ISO8601 GMT date format.
 	Expiration time.Time
+
+	// conditions should only be set with SetCondition or SetRangeCondition.
 	conditions []condition
 }
 
-// Cannot use ConditionMatchRange in here. Use SetRangeCondition for that.
+// SetCondition adds a POST policy condition to the policy.
+//
+// Although you must specify one condition for each form field that you specify
+// in the form, you can create more complex matching criteria by specifying
+// multiple conditions for a form field.
+//
+// ConditionMatchRange cannot be used in here. Use SetRangeCondition for that.
 func (p *Policy) SetCondition(k ConditionKey, v string, m ConditionMatch) {
 	c := condition{key: k, value: v, match: m}
 	p.conditions = append(p.conditions, c)
 }
 
+// SetRangeCondition adds a POST policy condition requiring a range of numbers
+// to the policy. This is only used for ConditionMatchRange.
 func (p *Policy) SetRangeCondition(k ConditionKey, l, u uint64) {
 	c := condition{
 		key:        k,
@@ -66,20 +82,15 @@ func (p *Policy) SetRangeCondition(k ConditionKey, l, u uint64) {
 	p.conditions = append(p.conditions, c)
 }
 
-func (p Policy) String() string {
-	b, err := json.Marshal(p)
-	if err != nil {
-		return err.Error()
-	}
-	return string(b)
-}
-
-// I want to avoid this but how?
+// policyJSON is needed to convert the Expiration time into a string inside of
+// MarshalJSON.
 type policyJSON struct {
 	Expiration string      `json:"expiration"`
 	Conditions []condition `json:"conditions"`
 }
 
+// MarshalJSON generates a policy document as AWS expects it. The Expiration
+// is formatted properly internally.
 func (p Policy) MarshalJSON() ([]byte, error) {
 	d := policyJSON{
 		p.Expiration.Format("2006-01-02T15:04:05.000Z"),
@@ -99,6 +110,8 @@ type condition struct {
 	match      ConditionMatch
 }
 
+// MarshalJSON determines how a condition should be represented in a policy and
+// converts that representation to JSON.
 func (c condition) MarshalJSON() ([]byte, error) {
 	// Exact Matches:
 	// {"acl": "public-read" }
