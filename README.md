@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/brianfoshee/s3post.png)](https://travis-ci.org/brianfoshee/s3post)
+[![GoDoc](https://godoc.org/github.com/brianfoshee/s3post?status.svg)](https://godoc.org/github.com/brianfoshee/s3post)
 
 Package s3post signs POST policy documents for browser-based file uploads
 to AWS S3. More details on browser-based file uploads can be found in the
