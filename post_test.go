@@ -1,4 +1,4 @@
-package s3upload
+package s3post
 
 import (
 	"strings"
@@ -10,14 +10,14 @@ func TestSign(t *testing.T) {
 	// clean up the policy whitespace first to match the AWS docs example
 	policy := strings.Replace(policy, "\n", "\r\n", -1)
 
-	s := New("us-east-1", awsSecret)
+	p := New("us-east-1", awsSecret)
 
 	// fake the current time to what the test data expects
 	now = func() time.Time {
 		return time.Date(2015, 12, 29, 0, 0, 0, 0, time.UTC)
 	}
 
-	policy, signature := s.Sign([]byte(policy))
+	policy, signature := p.Sign([]byte(policy))
 
 	now = time.Now
 

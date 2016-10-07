@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/brianfoshee/s3upload"
-	"github.com/brianfoshee/s3upload/policy"
+	"github.com/brianfoshee/s3post"
+	"github.com/brianfoshee/s3post/policy"
 )
 
 func main() {
@@ -25,7 +25,7 @@ func main() {
 		fmt.Println("Issue marshaling policy")
 	}
 
-	s := s3upload.New("us-east-1", os.Getenv("AWS_SECRET_KEY_ID"))
+	s := s3post.New("us-east-1", os.Getenv("AWS_SECRET_KEY_ID"))
 	// pass the policy into the AWS signing algorithm
 	encodedPolicy, signature := s.Sign(b)
 

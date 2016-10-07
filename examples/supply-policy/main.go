@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/brianfoshee/s3upload"
+	"github.com/brianfoshee/s3post"
 )
 
 // Payload is used to fill out the policy template
@@ -37,7 +37,7 @@ type Form struct {
 func main() {
 	// be sure to fill out the AWS secret, key, and bucket
 	secret := os.Getenv("AWS_SECRET_ACCESS_KEY")
-	su := s3upload.New("us-east-1", secret)
+	su := s3post.New("us-east-1", secret)
 	key := os.Getenv("AWS_ACCESS_KEY_ID")
 	bucket := "brianfoshee"
 

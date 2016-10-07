@@ -28,7 +28,7 @@ b, err := json.Marshal(p)
 // handle err
 
 // sign the policy
-s := s3upload.New("", "")
+s := s3post.New("", "")
 enc, signed := s.Sign(b)
 
 ```

@@ -1,5 +1,5 @@
-// Package s3upload provides a function to sign a S3 POST upload policy
-package s3upload
+// Package s3post provides a function to sign a S3 POST upload policy
+package s3post
 
 import (
 	"crypto/hmac"
@@ -10,22 +10,22 @@ import (
 	"time"
 )
 
-// S3Upload holds information necessary for signing policy documents.
-type S3Upload struct {
+// Post holds information necessary for signing POST policy documents.
+type Post struct {
 	awsRegion string
 	awsSecret string
 }
 
-// New returns an instance of S3Upload that uses the passed in region and
+// New returns an instance of Post that uses the passed in region and
 // secret. If either is empty, environment variables will be used.
-func New(region, secret string) *S3Upload {
+func New(region, secret string) *Post {
 	if region == "" {
 		region = os.Getenv("AWS_REGION")
 	}
 	if secret == "" {
 		secret = os.Getenv("AWS_SECRET_ACCESS_KEY")
 	}
-	s := &S3Upload{
+	s := &Post{
 		awsRegion: region,
 		awsSecret: secret,
 	}
@@ -44,7 +44,7 @@ var now = time.Now
 //
 // Returns the base64-encoded policy and the hex-encoded and signed policy.
 // If an error occurs two empty strings will be returned.
-func (s *S3Upload) Sign(policy []byte) (string, string) {
+func (s *Post) Sign(policy []byte) (string, string) {
 	// policy encoded in base64 (String to Sign)
 	stringToSign := make([]byte, base64.StdEncoding.EncodedLen(len(policy)))
 	base64.StdEncoding.Encode(stringToSign, policy)

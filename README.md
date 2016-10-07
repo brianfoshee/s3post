@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/brianfoshee/s3upload.png)](https://travis-ci.org/brianfoshee/s3upload)
+[![Build Status](https://travis-ci.org/brianfoshee/s3post.png)](https://travis-ci.org/brianfoshee/s3post)
 
-Package s3upload signs POST policy documents for browser-based file uploads
+Package s3post signs POST policy documents for browser-based file uploads
 to AWS S3. More details on browser-based file uploads can be found in the
 [AWS docs][docs].
 
@@ -15,8 +15,8 @@ The [policy][policy] package can be used to generate these documents if
 necessary.
 
 ```go
-su := s3upload.New("us-east-1", secret)
-encoded, signed := su.Sign(policyBytes)
+p := s3post.New("us-east-1", secret)
+encoded, signed := p.Sign(policyBytes)
 ```
 
 See the examples folder for complete usage.
@@ -29,4 +29,4 @@ The policy document is signed using this calculation:
 
 [docs]: http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-UsingHTTPPOST.html
 [pdocs]: http://docs.aws.amazon.com/AmazonS3/latest/API/sigv4-HTTPPOSTConstructPolicy.html
-[policy]: https://github.com/brianfoshee/s3upload/tree/master/policy
+[policy]: https://github.com/brianfoshee/s3post/tree/master/policy
