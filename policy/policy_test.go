@@ -10,46 +10,46 @@ func TestPolicy(t *testing.T) {
 	p := Policy{
 		Expiration: time.Date(2015, 12, 30, 12, 0, 0, 0, time.UTC),
 	}
-	p.SetCondition(ConditionKeyBucket, "sigv4examplebucket", ConditionMatchExact)
-	p.SetCondition(ConditionKeyKey, "user/user1/", ConditionMatchStartsWith)
-	p.SetCondition(ConditionKeyACL, "public-read", ConditionMatchExact)
+	p.SetCondition(ConditionBucket, "sigv4examplebucket", ConditionMatchExact)
+	p.SetCondition(ConditionKey, "user/user1/", ConditionMatchStartsWith)
+	p.SetCondition(ConditionACL, "public-read", ConditionMatchExact)
 	p.SetCondition(
-		ConditionKeySuccessActionRedirect,
+		ConditionSuccessActionRedirect,
 		"http://sigv4examplebucket.s3.amazonaws.com/successful_upload.html",
 		ConditionMatchExact,
 	)
 	p.SetCondition(
-		ConditionKeyContentType,
+		ConditionContentType,
 		"image/",
 		ConditionMatchStartsWith,
 	)
 	p.SetCondition(
-		ConditionKey("x-amz-meta-uuid"),
+		"x-amz-meta-uuid",
 		"14365123651274",
 		ConditionMatchExact,
 	)
 	p.SetCondition(
-		ConditionKey("x-amz-server-side-encryption"),
+		"x-amz-server-side-encryption",
 		"AES256",
 		ConditionMatchExact,
 	)
 	p.SetCondition(
-		ConditionKey("x-amz-meta-tag"),
+		"x-amz-meta-tag",
 		"",
 		ConditionMatchStartsWith,
 	)
 	p.SetCondition(
-		ConditionKeyAMZCredential,
+		ConditionAMZCredential,
 		"AKIAIOSFODNN7EXAMPLE/20151229/us-east-1/s3/aws4_request",
 		ConditionMatchExact,
 	)
 	p.SetCondition(
-		ConditionKeyAMZAlgorithm,
+		ConditionAMZAlgorithm,
 		AWSV4SignatureAlgorithm,
 		ConditionMatchExact,
 	)
 	p.SetCondition(
-		ConditionKeyAMZDate,
+		ConditionAMZDate,
 		"20151229T000000Z",
 		ConditionMatchExact,
 	)

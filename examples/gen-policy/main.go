@@ -15,9 +15,9 @@ func main() {
 	p := policy.Policy{
 		Expiration: time.Date(2007, 12, 01, 12, 0, 0, 0, time.UTC),
 	}
-	p.SetCondition(policy.ConditionKeyACL, "public-read", policy.ConditionMatchExact)
-	p.SetCondition(policy.ConditionKeyBucket, "johnsmith", policy.ConditionMatchExact)
-	p.SetCondition(policy.ConditionKeyKey, "user/eric/", policy.ConditionMatchStartsWith)
+	p.SetCondition(policy.ConditionACL, "public-read", policy.ConditionMatchExact)
+	p.SetCondition(policy.ConditionBucket, "johnsmith", policy.ConditionMatchExact)
+	p.SetCondition(policy.ConditionKey, "user/eric/", policy.ConditionMatchStartsWith)
 
 	// Serialize the policy as a JSON document (as expetect by AWS S3).
 	b, err := json.Marshal(p)
