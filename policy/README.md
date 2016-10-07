@@ -1,4 +1,4 @@
-Package policy provides functionlity to create a POST policy for uploading a
+Package policy provides functionality to create a POST policy for uploading a
 file directly from a browser to S3.
 
 More details for creating a policy can be found in [Amazon's docs][docs].
